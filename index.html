@@ -608,7 +608,7 @@
 
         .equipment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 32px;
             position: relative;
             z-index: 2;
@@ -656,13 +656,13 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(2,2,9,0.55) 100%);
-            opacity: 0.6;
+            background: linear-gradient(180deg, transparent 0%, rgba(2,2,9,0.3) 100%);
+            opacity: 0;
             transition: opacity 0.4s ease;
         }
 
         .eq-card:hover .eq-img-wrapper::after {
-            opacity: 0.35;
+            opacity: 0.25;
         }
 
         /* Сканирующая полоса */
@@ -1039,7 +1039,7 @@
     <!-- ГЕРОЙ -->
     <section class="hero" id="hero">
         <div class="hero-dots" id="hero-dots"></div>
-        <div class="hero-content reveal">
+        <div class="hero-content">
             <span class="hero-badge">СИЛА БЕЗ ЛОЖИ</span>
             <h1 class="hero-title">ДВЕ ГАНТЕЛИ<br><span>И ПРОТЕИН</span></h1>
             <p class="hero-subtitle">Тяжёлый железный зал для тех, кто выходит за пределы возможного. Никакого глянца — только дисциплина и результат.</p>
@@ -1051,7 +1051,7 @@
     </section>
 
     <!-- РАЗДЕЛ "О НАС" -->
-    <section id="about" class="section reveal">
+    <section id="about" class="section">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Философия силы</span>
@@ -1059,22 +1059,22 @@
             </div>
             
             <div class="about-wrapper">
-                <div class="about-visual reveal-delay-1">
-                    <img src="i.jfif" alt="Зона свободных весов" loading="lazy">
+                <div class="about-visual">
+                    <img src="post-45658-1283439926.jpg" alt="Зона свободных весов" loading="lazy">
                     <div class="about-badge">Зона Свободного Веса</div>
                 </div>
-                <div class="about-box reveal-delay-2">
+                <div class="about-box">
                     <p>Зал <strong>«Две гантели и протеин»</strong> был создан для тех, кто понимает истинную ценность тяжёлой работы. Мы выкинули всё лишнее: никакого глянца, никаких пластиковых декораций и бессмысленных тренажёров-пустышек.</p>
                     <p>Каждый квадратный метр нашего зала спроектирован в лучших традициях золотой эры бодибилдинга. Здесь всё дышит дисциплиной, драйвом и стремлением выходить за пределы возможных человеческих сил.</p>
                     <div class="about-quote">«Побеждает не тот, кто сильнее, а тот, кто готов идти до конца.»</div>
                 </div>
 
                 <div class="about-stats">
-                    <div class="stat-card reveal-delay-3">
+                    <div class="stat-card">
                         <div class="stat-num">1500</div>
                         <div class="stat-label">М² чистого железа</div>
                     </div>
-                    <div class="stat-card reveal-delay-3">
+                    <div class="stat-card">
                         <div class="stat-num">80 KG</div>
                         <div class="stat-label">Макс. гантель</div>
                     </div>
@@ -1084,7 +1084,7 @@
     </section>
 
     <!-- РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" (АНИМИРОВАННЫЙ С ФОТО) -->
-    <section id="equipment" class="section equipment-section reveal">
+    <section id="equipment" class="section equipment-section">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Оборудование легенд</span>
@@ -1094,7 +1094,7 @@
             <div class="equipment-grid">
                 
                 <!-- Карточка 1 -->
-                <div class="eq-card reveal-delay-1" data-tilt>
+                <div class="eq-card data-tilt">
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
                         <img src="i.jfif" alt="Силовая Рама «Iron Titan»" class="eq-img" loading="lazy">
@@ -1109,7 +1109,7 @@
                 </div>
 
                 <!-- Карточка 2 -->
-                <div class="eq-card reveal-delay-2" data-tilt>
+                <div class="eq-card data-tilt">
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
                         <img src="50071.970.jpg" alt="Гакк-Машина «Quad Destroyer»" class="eq-img" loading="lazy">
@@ -1124,7 +1124,7 @@
                 </div>
 
                 <!-- Карточка 3 -->
-                <div class="eq-card reveal-delay-3" data-tilt>
+                <div class="eq-card data-tilt">
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
                         <img src="3-Tier-Commercial-Gym-Use-Adjustable-Weight-Dumbbell-Storage-Rack-Stand.webp" alt="Гантельный Стенд (2 - 80 кг)" class="eq-img" loading="lazy">
@@ -1139,7 +1139,7 @@
                 </div>
 
                 <!-- Карточка 4 -->
-                <div class="eq-card reveal-delay-1" data-tilt>
+                <div class="eq-card data-tilt">
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
                         <img src="88e02752ddd7622297b0d999bf.png" alt="Кабельный Кроссовер 4-Station" class="eq-img" loading="lazy">
@@ -1158,7 +1158,7 @@
     </section>
 
     <!-- КОНТАКТЫ -->
-    <section id="contacts" class="section reveal">
+    <section id="contacts" class="section">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Твое начало путь к силе</span>
@@ -1166,22 +1166,22 @@
             </div>
 
             <div class="contacts-grid">
-                <div class="contact-card reveal">
-                    <div class="c-item reveal-delay-1">
+                <div class="contact-card">
+                    <div class="c-item">
                         <div class="c-icon">📍</div>
                         <div>
                             <h4>Адрес Храма Силы</h4>
                             <p>г. Москва, ул. Брутальная, д. 94<br>(м. Проспект Силы / Выход 2)</p>
                         </div>
                     </div>
-                    <div class="c-item reveal-delay-2">
+                    <div class="c-item">
                         <div class="c-icon">🕒</div>
                         <div>
                             <h4>Часы Работы</h4>
                             <p>Пн — Пт: 06:00 — 00:00<br>Сб — Вс: 08:00 — 22:00</p>
                         </div>
                     </div>
-                    <div class="c-item reveal-delay-3">
+                    <div class="c-item">
                         <div class="c-icon">📞</div>
                         <div>
                             <h4>Прямая Связь</h4>
@@ -1190,7 +1190,7 @@
                     </div>
                 </div>
 
-                <div class="map-box reveal-delay-2">
+                <div class="map-box">
                     <div class="map-pin" aria-label="Местонахождение зала"></div>
                     <div class="map-btn-wrapper">
                         <p>ЖДЕМ ТЕБЯ НА ТРЕНИРОВКЕ</p>
@@ -1198,7 +1198,7 @@
                     </div>
                 </div>
             </div>
-            <div class="contact-form reveal-delay-3" style="margin-top: 60px;">
+            <div class="contact-form" style="margin-top: 60px;">
                 <h2 class="section-title" style="font-size: 2.6rem; margin-bottom: 30px;">Записаться</h2>
                 <form id="contact-form" novalidate>
                     <div class="form-group">
@@ -1275,13 +1275,7 @@
         window.addEventListener('scroll', setActiveNav);
         setActiveNav();
 
-        const obs = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); obs.unobserve(e.target); } });
-        }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
-        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-        document.querySelectorAll('.stat-card, .eq-card, .contact-card, .about-box, .about-visual, .map-box, .contact-form, .c-item').forEach(el => {
-            if (!el.classList.contains('reveal')) el.classList.add('reveal');
-        });
+        // Все элементы видимы сразу — reveal-анимация отключена
 
         const tiltCards = document.querySelectorAll('[data-tilt]');
         tiltCards.forEach(card => {
