@@ -1,0 +1,726 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Спортивный зал «Две гантели и протеин» | Iron Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === ПЕРЕМЕННЫЕ И СБРОС === */
+        :root {
+            --bg-dark: #08080a;
+            --bg-card: #121216;
+            --accent-red: #ff003c;
+            --accent-gold: #ffb700;
+            --text-main: #ffffff;
+            --text-muted: #9e9ea7;
+            --font-head: 'Bebas Neue', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        body {
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* === ТИПОГРАФИКА И ОБЩИЕ ЭЛЕМЕНТЫ === */
+        h1, h2, h3 {
+            font-family: var(--font-head);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        .btn {
+            position: relative;
+            display: inline-block;
+            padding: 20px 45px;
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: #000;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #ff8800 100%);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 900;
+            border: none;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 25px rgba(255, 183, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 0, 60, 0.6);
+            background: linear-gradient(135deg, var(--accent-red) 0%, #ff4d00 100%);
+            color: #fff;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* === НАВИГАЦИЯ (STICKY GLASS) === */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(8, 8, 10, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 2.2rem;
+            color: #fff;
+            text-decoration: none;
+            line-height: 0.9;
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+        }
+
+        .logo span {
+            color: var(--accent-red);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: var(--font-head);
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+            text-shadow: 0 0 8px rgba(255, 183, 0, 0.6);
+        }
+
+        /* === HERO SECTION === */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 0, 60, 0.12) 0%, rgba(8, 8, 10, 1) 70%),
+                        linear-gradient(180deg, #08080a 0%, #121216 100%);
+            overflow: hidden;
+            padding: 80px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-gold);
+            background: rgba(255, 183, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            padding: 6px 16px;
+            margin-bottom: 25px;
+            clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            line-height: 0.95;
+            margin-bottom: 25px;
+            font-weight: 900;
+            background: linear-gradient(180deg, #ffffff 30%, #777777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(180deg, #ff003c 0%, #990024 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin: 0 auto 40px auto;
+            max-width: 700px;
+            font-weight: 600;
+        }
+
+        /* === SECTIONS GENERAL === */
+        .section {
+            padding: 110px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title {
+            font-size: clamp(2.8rem, 5vw, 4rem);
+            line-height: 1;
+            color: #fff;
+        }
+
+        .section-subtitle {
+            color: var(--accent-gold);
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* === РАЗДЕЛ "О НАС" === */
+        .about-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-box {
+            background: linear-gradient(145deg, #16161c, #0d0d10);
+            padding: 45px;
+            border-top: 3px solid var(--accent-red);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .about-box p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .about-quote {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            color: var(--accent-gold);
+            line-height: 1.1;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 35px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 0, 60, 0.4);
+        }
+
+        .stat-num {
+            font-family: var(--font-head);
+            font-size: 3.8rem;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        /* === РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" (С АНИМИРОВАННЫМИ ФОТО) === */
+        .equipment-section {
+            background-color: #0c0c0f;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 30px;
+        }
+
+        .eq-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .eq-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .eq-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) contrast(120%);
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        /* Оверлей эффекты для фото */
+        .eq-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(18, 18, 22, 0) 40%, rgba(18, 18, 22, 1) 100%),
+                        linear-gradient(135deg, rgba(255, 0, 60, 0.2) 0%, transparent 60%);
+            opacity: 0.6;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Сканирующая полоса */
+        .scan-line {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 183, 0, 0.2) 50%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        .eq-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 183, 0, 0.2);
+        }
+
+        .eq-card:hover .eq-img {
+            transform: scale(1.12);
+            filter: grayscale(0%) contrast(110%);
+        }
+
+        .eq-card:hover .eq-img-wrapper::after {
+            opacity: 0.2;
+        }
+
+        .eq-card:hover .scan-line {
+            opacity: 1;
+            animation: scanAnim 1.8s ease-in-out infinite;
+        }
+
+        @keyframes scanAnim {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        .eq-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 3;
+        }
+
+        .eq-title {
+            font-size: 1.7rem;
+            color: #fff;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .eq-card:hover .eq-title {
+            color: var(--accent-gold);
+        }
+
+        .eq-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .eq-tag {
+            align-self: flex-start;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+            background: rgba(255, 0, 60, 0.1);
+            padding: 5px 12px;
+            border: 1px solid var(--accent-red);
+        }
+
+        /* === РАЗДЕЛ "КОНТАКТЫ" === */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 40px;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+        }
+
+        .c-item {
+            margin-bottom: 30px;
+        }
+
+        .c-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .c-item h4 {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .c-item p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .map-box {
+            position: relative;
+            min-height: 350px;
+            background: linear-gradient(135deg, #181820 0%, #0a0a0d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .map-box::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--accent-red) 1px, transparent 0);
+            background-size: 24px 24px;
+            opacity: 0.15;
+        }
+
+        .map-btn-wrapper {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        /* === ФУТЕР === */
+        footer {
+            background-color: #040405;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* === МОБИЛЬНАЯ АДАПТИВНОСТЬ === */
+        @media (max-width: 900px) {
+            .about-wrapper, 
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .hero {
+                min-height: 75vh;
+                padding: 60px 15px;
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 18px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- НАВИГАЦИЯ -->
+    <header class="header">
+        <div class="container nav-container">
+            <a href="#" class="logo">Две Гантели <span>& Протеин</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">История</a></li>
+                    <li><a href="#equipment">Арсенал</a></li>
+                    <li><a href="#contacts">Локация</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="hero-badge">Gold Standard Gym Vibe</span>
+            <h1 class="hero-title">NO PAIN. NO GAIN. <span>ЖЕЛЕЗНЫЙ ХРАМ.</span></h1>
+            <p class="hero-subtitle">Здесь не место слабым оправданиям. Легендарная атмосфера дуэтов 90-х, тонны стального инвентаря и бескомпромиссная работа на результат.</p>
+            <a href="#contacts" class="btn">Вступить в клуб</a>
+        </div>
+    </section>
+
+    <!-- РАЗДЕЛ "О НАС" -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Философия силы</span>
+                <h2 class="section-title">История Железного Зала</h2>
+            </div>
+            
+            <div class="about-wrapper">
+                <div class="about-box">
+                    <p>Зал <strong>«Две гантели и протеин»</strong> был создан для тех, кто понимает истинную ценность тяжёлой работы. Мы выкинули всё лишнее: никакого глянца, никаких пластиковых декораций и бессмысленных тренажёров-пустышек.</p>
+                    <p>Каждый квадратный метр нашего зала спроектирован в лучших традициях золотой эры бодибилдинга. Здесь всё дышит дисциплиной, драйвом и стремлением выходить за пределы возможных человеческих сил.</p>
+                    <div class="about-quote">«Побеждает не тот, кто сильнее, а тот, кто готов идти до конца.»</div>
+                </div>
+
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-num">1500</div>
+                        <div class="stat-label">М² чистого железа</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">80 KG</div>
+                        <div class="stat-label">Макс. гантель</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">0%</div>
+                        <p class="stat-label">Гламура и ерунды</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Результата</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" (АНИМИРОВАННЫЙ С ФОТО) -->
+    <section id="equipment" class="section equipment-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Оборудование легенд</span>
+                <h2 class="section-title">Тяжёлый Арсенал</h2>
+            </div>
+
+            <div class="equipment-grid">
+                
+                <!-- Карточка 1 -->
+                <div class="eq-card">
+                    <div class="eq-img-wrapper">
+                        <div class="scan-line"></div>
+                        <img src="50071.970.jpg" alt="Силовая Рама «Iron Titan»" class="eq-img">
+                    </div>
+                    <div class="eq-content">
+                        <div>
+                            <h3 class="eq-title">Силовая Рама «Iron Titan»</h3>
+                            <p class="eq-desc">Толстостенная сталь, усиленные страховочные упоры. Создана для глубоких приседов и сверхтяжёлых жимов.</p>
+                        </div>
+                        <span class="eq-tag">Базовый арсенал</span>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div class="eq-card">
+                    <div class="eq-img-wrapper">
+                        <div class="scan-line"></div>
+                        <img src="i.jfif" alt="Гакк-Машина «Quad Destroyer»" class="eq-img">
+                    </div>
+                    <div class="eq-content">
+                        <div>
+                            <h3 class="eq-title">Гакк-Машина «Quad Destroyer»</h3>
+                            <p class="eq-desc">Анатомически точная траектория под углом 45°. Бесшумные стальные подшипники для максимальной проработки ног.</p>
+                        </div>
+                        <span class="eq-tag">Ноги & Ягодицы</span>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div class="eq-card">
+                    <div class="eq-img-wrapper">
+                        <div class="scan-line"></div>
+                        <img src="3-Tier-Commercial-Gym-Use-Adjustable-Weight-Dumbbell-Storage-Rack-Stand.webp" alt="Гантельный Стенд (2 - 80 кг)" class="eq-img">
+                    </div>
+                    <div class="eq-content">
+                        <div>
+                            <h3 class="eq-title">Гантельный Стенд (2 - 80 кг)</h3>
+                            <p class="eq-desc">Цельнолитые стальные гантели с глубокой противоскользящей насечкой. Шаг веса рассчитан на идеальную прогрессию.</p>
+                        </div>
+                        <span class="eq-tag">Свободный вес</span>
+                    </div>
+                </div>
+
+                <!-- Карточка 4 -->
+                <div class="eq-card">
+                    <div class="eq-img-wrapper">
+                        <div class="scan-line"></div>
+                        <img src="88e02752ddd7622297b0d999bf.png" alt="Кабельный Кроссовер 4-Station" class="eq-img">
+                    </div>
+                    <div class="eq-content">
+                        <div>
+                            <h3 class="eq-title">Кабельный Кроссовер 4-Station</h3>
+                            <p class="eq-desc">Профессиональная блочная система с подшипниками премиум-класса для изоляции широчайших и грудных мышц.</p>
+                        </div>
+                        <span class="eq-tag">Блочная станция</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- РАЗДЕЛ "КОНТАКТЫ" -->
+    <section id="contacts" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Твое начало путь к силе</span>
+                <h2 class="section-title">Контакты И Локация</h2>
+            </div>
+
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="c-item">
+                        <h4>Адрес Храма Силы</h4>
+                        <p>г. Москва, ул. Брутальная, д. 94<br>(м. Проспект Силы / Выход 2)</p>
+                    </div>
+                    <div class="c-item">
+                        <h4>Часы Работы</h4>
+                        <p>Понедельник — Пятница: 06:00 — 00:00<br>Суббота — Воскресенье: 08:00 — 22:00</p>
+                    </div>
+                    <div class="c-item">
+                        <h4>Прямая Связь</h4>
+                        <p>Тел: +7 (495) 900-90-90<br>Email: arnold@dve-ganteli.ru</p>
+                    </div>
+                </div>
+
+                <div class="map-box">
+                    <div class="map-btn-wrapper">
+                        <p style="font-family: var(--font-head); font-size: 2rem; color: #fff; margin-bottom: 15px;">ЖДЕМ ТЕБЯ НА ТРЕНИРОВКЕ</p>
+                        <a href="https://maps.google.com" target="_blank" class="btn" style="font-size: 1.1rem; padding: 12px 25px;">Открыть на карте</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Спортивный зал «Две гантели и протеин». Все права защищены. Est. 1994.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+
+
