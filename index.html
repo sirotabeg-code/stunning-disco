@@ -11,12 +11,18 @@
     <style>
         /* === ПЕРЕМЕННЫЕ И СБРОС === */
         :root {
-            --bg-dark: #0a0a26;
-            --bg-card: #131336;
-            --accent-red: #ff003c;
-            --accent-gold: #ffb700;
+            --bg-dark: #050512;
+            --bg-card: #0f0f2a;
+            --bg-glass: rgba(15, 15, 42, 0.55);
+            --accent-red: #ff0055;
+            --accent-red-hover: #ff3370;
+            --accent-gold: #ffd23a;
+            --accent-gold-dark: #e0a800;
             --text-main: #ffffff;
-            --text-muted: #9e9ea7;
+            --text-muted: #b8b8d0;
+            --glow-red: rgba(255, 0, 85, 0.45);
+            --glow-gold: rgba(255, 210, 58, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --font-head: 'Bebas Neue', sans-serif;
             --font-body: 'Montserrat', sans-serif;
         }
@@ -36,8 +42,24 @@
 
         body {
             overflow-x: hidden;
-            line-height: 1.5;
+            line-height: 1.6;
+            background: radial-gradient(circle at 50% 0%, #0f0f2a 0%, #050512 60%, #020209 100%);
+            background-attachment: fixed;
         }
+
+        /* === СКРЫТЫЕ ЭЛЕМЕНТЫ ДЛЯ АНИМАЦИИ СКРОЛЛА === */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.15s; }
+        .reveal-delay-2 { transition-delay: 0.3s; }
+        .reveal-delay-3 { transition-delay: 0.45s; }
 
         /* === ТИПОГРАФИКА И ОБЩИЕ ЭЛЕМЕНТЫ === */
         h1, h2, h3 {
@@ -60,26 +82,64 @@
             font-size: 1.6rem;
             letter-spacing: 2px;
             color: #000;
-            background: linear-gradient(135deg, var(--accent-gold) 0%, #ff8800 100%);
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
             text-decoration: none;
             text-transform: uppercase;
             font-weight: 900;
             border: none;
             clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 0 25px rgba(255, 183, 0, 0.3);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 25px var(--glow-gold);
             cursor: pointer;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-red) 0%, #990024 100%);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: -1;
         }
 
         .btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 0 40px rgba(255, 0, 60, 0.6);
-            background: linear-gradient(135deg, var(--accent-red) 0%, #ff4d00 100%);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 0 50px var(--glow-red), 0 0 80px var(--glow-red);
             color: #fff;
         }
 
+        .btn:hover::before {
+            opacity: 1;
+        }
+
         .btn:active {
-            transform: translateY(1px);
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .btn-outline {
+            padding: 20px 45px;
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 900;
+            border: 2px solid var(--accent-gold);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all 0.35s ease;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            color: #000;
+            background: var(--accent-gold);
+            box-shadow: 0 0 40px var(--glow-gold);
+            transform: translateY(-4px);
         }
 
         /* === НАВИГАЦИЯ (STICKY GLASS) === */
@@ -87,25 +147,32 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(10, 10, 38, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.4s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(5, 5, 18, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 25px;
+            padding: 18px 25px;
         }
 
         .logo {
             font-family: var(--font-head);
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             color: #fff;
             text-decoration: none;
             line-height: 0.9;
-            text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+            z-index: 1001;
         }
 
         .logo span {
@@ -115,7 +182,8 @@
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 35px;
+            gap: 40px;
+            align-items: center;
         }
 
         .nav-links a {
@@ -124,39 +192,128 @@
             font-family: var(--font-head);
             font-size: 1.3rem;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            position: relative;
         }
 
-        .nav-links a:hover {
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: width 0.35s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
             color: var(--accent-gold);
-            text-shadow: 0 0 8px rgba(255, 183, 0, 0.6);
+            text-shadow: 0 0 12px rgba(255, 210, 58, 0.5);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            margin-left: 25px;
+        }
+
+        /* Мобильная кнопка меню */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
         }
 
         /* === HERO SECTION === */
         .hero {
             position: relative;
-            min-height: 90vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-                        url("7LcIw5qnhjwOVjOLsH_zYw.jpeg"),
-                        radial-gradient(circle at center, rgba(255, 0, 60, 0.12) 0%, rgba(10, 10, 38, 1) 70%),
-                        linear-gradient(180deg, #0a0a26 0%, #131336 100%);
+            background:
+                linear-gradient(180deg, rgba(5, 5, 18, 0.85) 0%, rgba(2, 2, 9, 0.95) 100%),
+                url("7LcIw5qnhjwOVjOLsH_zYw.jpeg");
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             overflow: hidden;
-            padding: 80px 20px;
+            padding: 100px 20px;
+            isolation: isolate;
+        }
+
+        /* Декоративные угловые акценты */
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .hero::before {
-            content: '';
+            top: -50px;
+            left: -50px;
+            border-color: transparent transparent var(--accent-red) var(--accent-red);
+            animation: rotateCorner 8s linear infinite;
+        }
+
+        .hero::after {
+            bottom: -50px;
+            right: -50px;
+            border-color: var(--accent-gold) var(--accent-gold) transparent transparent;
+            animation: rotateCorner 8s linear infinite reverse;
+        }
+
+        @keyframes rotateCorner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Пульсирующие точки */
+        .hero-dots {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px);
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
             pointer-events: none;
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent-gold);
+            animation: pulseDot 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.4); }
         }
 
         .hero-content {
@@ -170,77 +327,134 @@
             font-size: 0.85rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             color: var(--accent-gold);
-            background: rgba(255, 183, 0, 0.1);
+            background: rgba(255, 210, 58, 0.12);
             border: 1px solid var(--accent-gold);
-            padding: 6px 16px;
-            margin-bottom: 25px;
-            clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+            padding: 8px 22px;
+            margin-bottom: 30px;
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+            box-shadow: 0 0 20px rgba(255, 210, 58, 0.25);
+            animation: revealBadge 1s ease forwards;
+            opacity: 0;
         }
+
+        @keyframes revealBadge {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-badge { transform: translateY(20px); }
 
         .hero-title {
-            font-size: clamp(3.5rem, 8vw, 6.5rem);
-            line-height: 0.95;
-            margin-bottom: 25px;
+            font-size: clamp(4rem, 10vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: 30px;
             font-weight: 900;
-            background: linear-gradient(180deg, #ffffff 30%, #777777 100%);
+            background: linear-gradient(180deg, #ffffff 0%, var(--accent-gold) 50%, #fff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+            animation: revealTitle 1.2s ease forwards;
+            opacity: 0;
         }
 
+        @keyframes revealTitle {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-title { transform: translateY(30px); }
+
         .hero-title span {
-            display: block;
-            background: linear-gradient(180deg, #ff003c 0%, #990024 100%);
+            background: linear-gradient(180deg, var(--accent-red) 0%, #990024 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 0, 60, 0.3);
+            text-shadow: 0 0 40px rgba(255, 0, 85, 0.5);
         }
 
         .hero-img {
             width: 100%;
-            max-width: 600px;
+            max-width: 620px;
             height: auto;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(255, 0, 60, 0.3);
-            border: 2px solid rgba(255, 183, 0, 0.2);
-            margin: 30px auto 0 auto;
+            border-radius: 16px;
+            box-shadow: 0 0 60px rgba(255, 0, 85, 0.35), 0 0 100px rgba(255, 210, 58, 0.2);
+            border: 2px solid rgba(255, 210, 58, 0.25);
+            margin: 40px auto 0 auto;
             display: block;
             object-fit: cover;
+            animation: revealImg 1.5s ease forwards;
+            opacity: 0;
         }
 
+        @keyframes revealImg {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-img { transform: translateY(40px); }
+
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             color: var(--text-muted);
-            margin: 0 auto 40px auto;
+            margin: 30px auto 50px auto;
             max-width: 700px;
             font-weight: 600;
+            animation: revealSubtitle 1.6s ease forwards;
+            opacity: 0;
         }
+
+        @keyframes revealSubtitle {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-subtitle { transform: translateY(30px); }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: revealActions 2s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes revealActions {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-actions { transform: translateY(40px); }
 
         /* === SECTIONS GENERAL === */
         .section {
-            padding: 110px 0;
+            padding: 120px 0;
             position: relative;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 70px;
+            margin-bottom: 80px;
         }
 
         .section-title {
-            font-size: clamp(2.8rem, 5vw, 4rem);
-            line-height: 1;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            line-height: 1.05;
             color: #fff;
+            margin-bottom: 16px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-gold));
+            border-radius: 2px;
         }
 
         .section-subtitle {
             color: var(--accent-gold);
             font-weight: 800;
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            font-size: 0.95rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 0;
             display: block;
         }
 
@@ -248,49 +462,98 @@
         .about-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 60px;
             align-items: center;
         }
 
+        .about-visual {
+            position: relative;
+            height: 420px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        }
+
+        .about-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s ease;
+        }
+
+        .about-visual:hover img {
+            transform: scale(1.05);
+        }
+
+        .about-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,0,85,0.15) 0%, transparent 40%, rgba(255,210,58,0.15) 100%);
+        }
+
+        .about-badge {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: rgba(5,5,18,0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--accent-gold);
+            padding: 10px 18px;
+            font-family: var(--font-head);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(255,210,58,0.15);
+        }
+
         .about-box {
-            background: linear-gradient(145deg, #16161c, #0d0d10);
-            padding: 45px;
-            border-top: 3px solid var(--accent-red);
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 50px;
+            border-top: 4px solid var(--accent-red);
+            border-left: 1px solid var(--glass-border);
+            border-radius: 0 24px 0 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             position: relative;
         }
 
         .about-box p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-size: 1.15rem;
+            margin-bottom: 24px;
         }
 
         .about-quote {
             font-family: var(--font-head);
-            font-size: 2rem;
+            font-size: 2.6rem;
             color: var(--accent-gold);
             line-height: 1.1;
-            border-left: 4px solid var(--accent-gold);
-            padding-left: 15px;
-            margin-top: 30px;
+            border-left: 5px solid var(--accent-gold);
+            padding-left: 22px;
+            margin-top: 34px;
+            text-shadow: 0 0 30px rgba(255, 210, 58, 0.3);
         }
 
         .about-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
         }
 
         .stat-card {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 35px 20px;
+            border: 1px solid var(--glass-border);
+            padding: 32px 22px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease;
+            border-radius: 16px;
+            transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .stat-card::before {
@@ -299,59 +562,80 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), var(--accent-gold), transparent);
+            transform: scaleX(0);
+            transition: transform 0.45s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255, 0, 60, 0.4);
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px var(--glow-gold);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
 
         .stat-num {
             font-family: var(--font-head);
-            font-size: 3.8rem;
+            font-size: 4.2rem;
             color: #fff;
             line-height: 1;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, #ffffff 0%, var(--accent-gold) 60%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .stat-label {
             color: var(--text-muted);
             font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             font-weight: 700;
         }
 
-        /* === РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" (С АНИМИРОВАННЫМИ ФОТО) === */
+        /* === РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" === */
         .equipment-section {
-            background-color: #0c0c0f;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, #070714 0%, #050512 50%, #020209 100%);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
         }
 
         .equipment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            position: relative;
+            z-index: 2;
         }
 
         .eq-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(14px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+
+        .eq-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--accent-gold);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 40px var(--glow-gold);
         }
 
         .eq-img-wrapper {
             position: relative;
             width: 100%;
-            height: 260px;
+            height: 250px;
             overflow: hidden;
         }
 
@@ -359,19 +643,26 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(80%) contrast(120%);
-            transition: transform 0.6s ease, filter 0.6s ease;
+            filter: grayscale(40%) contrast(115%);
+            transition: all 0.7s ease;
         }
 
-        /* Оверлей эффекты для фото */
+        .eq-card:hover .eq-img {
+            transform: scale(1.1);
+            filter: grayscale(0%) contrast(120%);
+        }
+
         .eq-img-wrapper::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(18, 18, 22, 0) 40%, rgba(18, 18, 22, 1) 100%),
-                        linear-gradient(135deg, rgba(255, 0, 60, 0.2) 0%, transparent 60%);
-            opacity: 0.6;
+            background: linear-gradient(180deg, transparent 0%, rgba(2,2,9,0.8) 100%);
+            opacity: 0.85;
             transition: opacity 0.4s ease;
+        }
+
+        .eq-card:hover .eq-img-wrapper::after {
+            opacity: 0.6;
         }
 
         /* Сканирующая полоса */
@@ -381,31 +672,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, transparent 0%, rgba(255, 183, 0, 0.2) 50%, transparent 100%);
-            z-index: 2;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 210, 58, 0.18) 50%, transparent 100%);
+            z-index: 3;
             pointer-events: none;
-            transition: opacity 0.3s;
             opacity: 0;
-        }
-
-        .eq-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent-gold);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 183, 0, 0.2);
-        }
-
-        .eq-card:hover .eq-img {
-            transform: scale(1.12);
-            filter: grayscale(0%) contrast(110%);
-        }
-
-        .eq-card:hover .eq-img-wrapper::after {
-            opacity: 0.2;
+            transition: opacity 0.3s;
         }
 
         .eq-card:hover .scan-line {
             opacity: 1;
-            animation: scanAnim 1.8s ease-in-out infinite;
+            animation: scanAnim 2s ease-in-out infinite;
         }
 
         @keyframes scanAnim {
@@ -414,20 +690,20 @@
         }
 
         .eq-content {
-            padding: 25px;
+            padding: 30px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            z-index: 3;
+            z-index: 4;
         }
 
         .eq-title {
-            font-size: 1.7rem;
+            font-size: 1.8rem;
             color: #fff;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
+            margin-bottom: 12px;
+            transition: color 0.35s ease;
         }
 
         .eq-card:hover .eq-title {
@@ -436,8 +712,9 @@
 
         .eq-desc {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
 
         .eq-tag {
@@ -445,44 +722,85 @@
             font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             color: var(--accent-red);
-            background: rgba(255, 0, 60, 0.1);
-            padding: 5px 12px;
+            background: rgba(255, 0, 85, 0.12);
+            padding: 6px 14px;
             border: 1px solid var(--accent-red);
+            border-radius: 4px;
+            transition: all 0.35s ease;
+        }
+
+        .eq-card:hover .eq-tag {
+            background: var(--accent-red);
+            color: #fff;
+            box-shadow: 0 0 20px var(--glow-red);
         }
 
         /* === РАЗДЕЛ "КОНТАКТЫ" === */
         .contacts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 50px;
         }
 
         .contact-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 40px;
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            background: var(--bg-glass);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            padding: 45px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(255,0,85,0.15) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .c-item {
+            display: flex;
+            gap: 16px;
             margin-bottom: 30px;
+            align-items: flex-start;
         }
 
         .c-item:last-child {
             margin-bottom: 0;
         }
 
-        .c-item h4 {
-            font-family: var(--font-head);
-            font-size: 1.5rem;
+        .c-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 210, 58, 0.1);
+            border: 1px solid var(--accent-gold);
             color: var(--accent-gold);
-            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .c-item div h4 {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
             letter-spacing: 1px;
         }
 
-        .c-item p {
+        .c-item div p {
             color: var(--text-muted);
             font-size: 1.05rem;
             line-height: 1.6;
@@ -490,13 +808,14 @@
 
         .map-box {
             position: relative;
-            min-height: 350px;
-            background: linear-gradient(135deg, #181820 0%, #0a0a0d 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            min-height: 520px;
+            background: linear-gradient(135deg, #0b0b1e 0%, #050512 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
         .map-box::before {
@@ -505,54 +824,185 @@
             width: 100%;
             height: 100%;
             background-image: radial-gradient(var(--accent-red) 1px, transparent 0);
-            background-size: 24px 24px;
-            opacity: 0.15;
+            background-size: 28px 28px;
+            opacity: 0.12;
+        }
+
+        .map-pin {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            background: var(--accent-red);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg) translate(-50%, -50%);
+            box-shadow: 0 0 30px var(--glow-red);
+            animation: pulsePin 2.5s ease-in-out infinite;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-pin::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        @keyframes pulsePin {
+            0%, 100% { transform: rotate(-45deg) translate(-50%, -50%) scale(1); box-shadow: 0 0 30px var(--glow-red); }
+            50% { transform: rotate(-45deg) translate(-50%, -50%) scale(1.15); box-shadow: 0 0 50px var(--glow-red), 0 0 80px var(--glow-red); }
         }
 
         .map-btn-wrapper {
             position: relative;
-            z-index: 2;
+            z-index: 5;
             text-align: center;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .map-btn-wrapper p {
+            font-family: var(--font-head);
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 24px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
         /* === ФУТЕР === */
         footer {
-            background-color: #040405;
-            padding: 40px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: #020209;
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--glass-border);
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-gold));
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
         }
 
         /* === МОБИЛЬНАЯ АДАПТИВНОСТЬ === */
         @media (max-width: 900px) {
-            .about-wrapper, 
+            .about-wrapper,
             .contacts-grid {
                 grid-template-columns: 1fr;
             }
 
             .nav-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 16px;
+                padding: 16px 20px;
             }
 
             .nav-links {
+                display: none;
+                flex-direction: column;
                 gap: 20px;
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+                background: rgba(5,5,18,0.95);
+                border-top: 1px solid var(--glass-border);
+                border-radius: 0 0 20px 20px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 1.4rem;
+            }
+
+            .nav-cta {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
             }
 
             .hero {
-                min-height: 75vh;
-                padding: 60px 15px;
+                min-height: 85vh;
+                padding: 100px 20px;
+            }
+
+            .hero-title {
+                font-size: clamp(3rem, 12vw, 5.5rem);
+            }
+
+            .hero-img {
+                max-width: 100%;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .about-visual {
+                height: 300px;
+            }
+
+            .about-box {
+                padding: 35px 30px;
+                border-radius: 0 16px 0 16px;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
             }
 
             .section {
-                padding: 70px 0;
+                padding: 90px 0;
             }
 
-            .btn {
-                width: 100%;
-                padding: 18px 20px;
+            .contacts-grid {
+                gap: 30px;
+            }
+
+            .contact-card,
+            .contact-form {
+                padding: 35px 30px;
+            }
+
+            .map-box {
+                min-height: 380px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-badge,
+            .btn,
+            .btn-outline {
+                font-size: 1.3rem;
+                padding: 16px 30px;
+            }
+            .eq-content {
+                padding: 24px;
             }
         }
     </style>
@@ -560,31 +1010,40 @@
 <body>
 
     <!-- НАВИГАЦИЯ -->
-    <header class="header">
-        <div class="container nav-container">
-            <a href="#" class="logo">Две Гантели <span>& Протеин</span></a>
+    <header class="header" id="header">
+        <div class="nav-container">
+            <a href="#" class="logo" id="logo">IR<span>ON</span> EDITION</a>
             <nav>
-                <ul class="nav-links">
-                    <li><a href="#about">История</a></li>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="#hero" class="active">Главная</a></li>
+                    <li><a href="#about">О зале</a></li>
                     <li><a href="#equipment">Арсенал</a></li>
-                    <li><a href="#contacts">Локация</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
                 </ul>
             </nav>
+            <a href="#contacts" class="btn nav-cta">Записаться</a>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="container hero-content">
-            <span class="hero-badge">Gold Standard Gym Vibe</span>
-            <h1 class="hero-title">NO PAIN. NO GAIN. <span>ЖЕЛЕЗНЫЙ ХРАМ.</span></h1>
-            <p class="hero-subtitle">Здесь не место слабым оправданиям. Легендарная атмосфера дуэтов 90-х, тонны стального инвентаря и бескомпромиссная работа на результат.</p>
-            <a href="#contacts" class="btn">Вступить в клуб</a>
+    <!-- ГЕРОЙ -->
+    <section class="hero" id="hero">
+        <div class="hero-dots" id="hero-dots"></div>
+        <div class="hero-content reveal">
+            <span class="hero-badge">СИЛА БЕЗ ЛОЖИ</span>
+            <h1 class="hero-title">ДВЕ ГАНТЕЛИ<br><span>И ПРОТЕИН</span></h1>
+            <p class="hero-subtitle">Тяжёлый железный зал для тех, кто выходит за пределы возможного. Никакого глянца — только дисциплина и результат.</p>
+            <div class="hero-actions">
+                <a href="#equipment" class="btn">Посмотреть арсенал</a>
+                <a href="#contacts" class="btn-outline">Записаться на тренировку</a>
+            </div>
         </div>
     </section>
 
     <!-- РАЗДЕЛ "О НАС" -->
-    <section id="about" class="section">
+    <section id="about" class="section reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Философия силы</span>
@@ -592,28 +1051,24 @@
             </div>
             
             <div class="about-wrapper">
-                <div class="about-box">
+                <div class="about-visual reveal-delay-1">
+                    <img src="i.jfif" alt="Зона свободных весов" loading="lazy">
+                    <div class="about-badge">Зона Свободного Веса</div>
+                </div>
+                <div class="about-box reveal-delay-2">
                     <p>Зал <strong>«Две гантели и протеин»</strong> был создан для тех, кто понимает истинную ценность тяжёлой работы. Мы выкинули всё лишнее: никакого глянца, никаких пластиковых декораций и бессмысленных тренажёров-пустышек.</p>
                     <p>Каждый квадратный метр нашего зала спроектирован в лучших традициях золотой эры бодибилдинга. Здесь всё дышит дисциплиной, драйвом и стремлением выходить за пределы возможных человеческих сил.</p>
                     <div class="about-quote">«Побеждает не тот, кто сильнее, а тот, кто готов идти до конца.»</div>
                 </div>
 
                 <div class="about-stats">
-                    <div class="stat-card">
+                    <div class="stat-card reveal-delay-3">
                         <div class="stat-num">1500</div>
                         <div class="stat-label">М² чистого железа</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card reveal-delay-3">
                         <div class="stat-num">80 KG</div>
                         <div class="stat-label">Макс. гантель</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-num">0%</div>
-                        <p class="stat-label">Гламура и ерунды</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-num">100%</div>
-                        <div class="stat-label">Результата</div>
                     </div>
                 </div>
             </div>
@@ -621,7 +1076,7 @@
     </section>
 
     <!-- РАЗДЕЛ "ТЯЖЕЛЫЙ АРСЕНАЛ" (АНИМИРОВАННЫЙ С ФОТО) -->
-    <section id="equipment" class="section equipment-section">
+    <section id="equipment" class="section equipment-section reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Оборудование легенд</span>
@@ -631,10 +1086,10 @@
             <div class="equipment-grid">
                 
                 <!-- Карточка 1 -->
-                <div class="eq-card">
+                <div class="eq-card reveal-delay-1" data-tilt>
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
-                        <img src="i.jfif" alt="Силовая Рама «Iron Titan»" class="eq-img">
+                        <img src="i.jfif" alt="Силовая Рама «Iron Titan»" class="eq-img" loading="lazy">
                     </div>
                     <div class="eq-content">
                         <div>
@@ -646,10 +1101,10 @@
                 </div>
 
                 <!-- Карточка 2 -->
-                <div class="eq-card">
+                <div class="eq-card reveal-delay-2" data-tilt>
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
-                        <img src="50071.970.jpg" alt="Гакк-Машина «Quad Destroyer»" class="eq-img">
+                        <img src="50071.970.jpg" alt="Гакк-Машина «Quad Destroyer»" class="eq-img" loading="lazy">
                     </div>
                     <div class="eq-content">
                         <div>
@@ -661,10 +1116,10 @@
                 </div>
 
                 <!-- Карточка 3 -->
-                <div class="eq-card">
+                <div class="eq-card reveal-delay-3" data-tilt>
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
-                        <img src="3-Tier-Commercial-Gym-Use-Adjustable-Weight-Dumbbell-Storage-Rack-Stand.webp" alt="Гантельный Стенд (2 - 80 кг)" class="eq-img">
+                        <img src="3-Tier-Commercial-Gym-Use-Adjustable-Weight-Dumbbell-Storage-Rack-Stand.webp" alt="Гантельный Стенд (2 - 80 кг)" class="eq-img" loading="lazy">
                     </div>
                     <div class="eq-content">
                         <div>
@@ -676,10 +1131,10 @@
                 </div>
 
                 <!-- Карточка 4 -->
-                <div class="eq-card">
+                <div class="eq-card reveal-delay-1" data-tilt>
                     <div class="eq-img-wrapper">
                         <div class="scan-line"></div>
-                        <img src="88e02752ddd7622297b0d999bf.png" alt="Кабельный Кроссовер 4-Station" class="eq-img">
+                        <img src="88e02752ddd7622297b0d999bf.png" alt="Кабельный Кроссовер 4-Station" class="eq-img" loading="lazy">
                     </div>
                     <div class="eq-content">
                         <div>
@@ -694,8 +1149,8 @@
         </div>
     </section>
 
-    <!-- РАЗДЕЛ "КОНТАКТЫ" -->
-    <section id="contacts" class="section">
+    <!-- КОНТАКТЫ -->
+    <section id="contacts" class="section reveal">
         <div class="container">
             <div class="section-header">
                 <span class="section-subtitle">Твое начало путь к силе</span>
@@ -703,38 +1158,173 @@
             </div>
 
             <div class="contacts-grid">
-                <div class="contact-card">
-                    <div class="c-item">
-                        <h4>Адрес Храма Силы</h4>
-                        <p>г. Москва, ул. Брутальная, д. 94<br>(м. Проспект Силы / Выход 2)</p>
+                <div class="contact-card reveal">
+                    <div class="c-item reveal-delay-1">
+                        <div class="c-icon">📍</div>
+                        <div>
+                            <h4>Адрес Храма Силы</h4>
+                            <p>г. Москва, ул. Брутальная, д. 94<br>(м. Проспект Силы / Выход 2)</p>
+                        </div>
                     </div>
-                    <div class="c-item">
-                        <h4>Часы Работы</h4>
-                        <p>Понедельник — Пятница: 06:00 — 00:00<br>Суббота — Воскресенье: 08:00 — 22:00</p>
+                    <div class="c-item reveal-delay-2">
+                        <div class="c-icon">🕒</div>
+                        <div>
+                            <h4>Часы Работы</h4>
+                            <p>Пн — Пт: 06:00 — 00:00<br>Сб — Вс: 08:00 — 22:00</p>
+                        </div>
                     </div>
-                    <div class="c-item">
-                        <h4>Прямая Связь</h4>
-                        <p>Тел: +7 (495) 900-90-90<br>Email: arnold@dve-ganteli.ru</p>
+                    <div class="c-item reveal-delay-3">
+                        <div class="c-icon">📞</div>
+                        <div>
+                            <h4>Прямая Связь</h4>
+                            <p>Тел: +7 (495) 900-90-90<br>Email: arnold@dve-ganteli.ru</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="map-box">
+                <div class="map-box reveal-delay-2">
+                    <div class="map-pin" aria-label="Местонахождение зала"></div>
                     <div class="map-btn-wrapper">
-                        <p style="font-family: var(--font-head); font-size: 2rem; color: #fff; margin-bottom: 15px;">ЖДЕМ ТЕБЯ НА ТРЕНИРОВКЕ</p>
-                        <a href="https://maps.google.com" target="_blank" class="btn" style="font-size: 1.1rem; padding: 12px 25px;">Открыть на карте</a>
+                        <p>ЖДЕМ ТЕБЯ НА ТРЕНИРОВКЕ</p>
+                        <a href="https://maps.google.com" target="_blank" class="btn">Открыть на карте</a>
                     </div>
                 </div>
+            </div>
+            <div class="contact-form reveal-delay-3" style="margin-top: 60px;">
+                <h2 class="section-title" style="font-size: 2.6rem; margin-bottom: 30px;">Записаться</h2>
+                <form id="contact-form" novalidate>
+                    <div class="form-group">
+                        <label for="form-name">Имя</label>
+                        <input type="text" id="form-name" placeholder="Как к вам обращаться" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-phone">Телефон</label>
+                        <input type="tel" id="form-phone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-message">Комментарий</label>
+                        <textarea id="form-message" placeholder="Какая цель? Набор массы, похудение, сила..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Отправить заявку</button>
+                </form>
             </div>
         </div>
     </section>
 
     <!-- ФУТЕР -->
     <footer>
-        <div class="container">
+        <div class="container footer-content">
             <p>&copy; 2026 Спортивный зал «Две гантели и протеин». Все права защищены. Est. 1994.</p>
         </div>
     </footer>
 
+    <script>
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 60) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            const spans = menuToggle.querySelectorAll('span');
+            if (navLinks.classList.contains('open')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+            } else {
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '';
+                spans[2].style.transform = '';
+            }
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = '';
+                spans[1].style.opacity = '';
+                spans[2].style.transform = '';
+            });
+        });
+
+        const sections = document.querySelectorAll('section[id]');
+        const navItems = document.querySelectorAll('.nav-links a');
+        function setActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const st = section.offsetTop - 120;
+                const sb = st + section.offsetHeight;
+                if (window.scrollY >= st && window.scrollY < sb) current = section.getAttribute('id');
+            });
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.getAttribute('href') === '#' + current);
+            });
+        }
+        window.addEventListener('scroll', setActiveNav);
+        setActiveNav();
+
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); obs.unobserve(e.target); } });
+        }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        document.querySelectorAll('.stat-card, .eq-card, .contact-card, .about-box, .about-visual, .map-box, .contact-form, .c-item').forEach(el => {
+            if (!el.classList.contains('reveal')) el.classList.add('reveal');
+        });
+
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const r = card.getBoundingClientRect();
+                const x = e.clientX - r.left, y = e.clientY - r.top;
+                const cx = r.width / 2, cy = r.height / 2;
+                const rx = ((y - cy) / cy) * -4, ry = ((x - cx) / cx) * 4;
+                card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+                card.style.transition = 'none';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.transition = 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
+            });
+        });
+
+        const dots = document.getElementById('hero-dots');
+        for (let i = 0; i < 22; i++) {
+            const d = document.createElement('div');
+            d.className = 'dot';
+            d.style.left = Math.random() * 100 + '%';
+            d.style.top = Math.random() * 100 + '%';
+            d.style.animationDelay = Math.random() * 4 + 's';
+            d.style.animationDuration = (3 + Math.random() * 3) + 's';
+            dots.appendChild(d);
+        }
+
+        const form = document.getElementById('contact-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            const orig = btn.textContent;
+            btn.textContent = 'Заявка отправлена!';
+            btn.style.background = 'linear-gradient(135deg, #00d955, #00b030)';
+            btn.style.color = '#000';
+            setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; form.reset(); }, 2500);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function (e) {
+                const id = this.getAttribute('href');
+                if (id === '#') return;
+                const t = document.querySelector(id);
+                if (t) {
+                    e.preventDefault();
+                    window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
